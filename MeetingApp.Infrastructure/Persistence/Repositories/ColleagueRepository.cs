@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MeetingApp.Infrastructure.Persistence.Repositories;
 
+/// <summary>
+/// Infrastructure implementation for data access.
+/// Architectural Update: Decoupled from departments. Operates on a single SQLite pool.
+/// </summary>
 public class ColleagueRepository(MeetingDbContext dbContext) : IColleagueRepository
 {
     public async Task<List<ColleagueRecord>> GetActiveColleaguesAsync(CancellationToken cancellationToken = default)
@@ -34,6 +38,13 @@ public class ColleagueRepository(MeetingDbContext dbContext) : IColleagueReposit
     public async Task UpdateRangeAsync(IEnumerable<ColleagueRecord> colleagues, CancellationToken cancellationToken = default)
     {
         dbContext.Colleagues.UpdateRange(colleagues);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    // New physical delete implementation
+    public async Task DeleteAsync(ColleagueRecord colleague, CancellationToken cancellationToken = default)
+    {
+        dbContext.Colleagues.Remove(colleague);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

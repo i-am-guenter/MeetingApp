@@ -5,7 +5,7 @@ using MeetingApp.Domain.Moderators;
 
 namespace MeetingApp.Application.Moderators.Commands.ManagePool;
 
-// The UI now dictates the full dataset
+// Assuming the Command record is defined in the same file or a corresponding one.
 public record AddColleagueCommand(string Upn, string FirstName, string LastName) : IRequest<Result<Unit>>;
 
 public class AddColleagueCommandHandler(IColleagueRepository colleagueRepository) 
@@ -15,7 +15,6 @@ public class AddColleagueCommandHandler(IColleagueRepository colleagueRepository
     {
         string normalizedUpn = request.Upn.ToLowerInvariant().Trim();
         
-        // 1. Check for duplicates or soft-deleted users
         var allColleagues = await colleagueRepository.GetAllColleaguesAsync(cancellationToken);
         var existingRecord = allColleagues.FirstOrDefault(c => c.Upn == normalizedUpn);
 
@@ -26,16 +25,15 @@ public class AddColleagueCommandHandler(IColleagueRepository colleagueRepository
                 return Result<Unit>.Failure($"A colleague with UPN '{normalizedUpn}' is already active in the pool.");
             }
             
-            // Reactivate soft-deleted user and update name if it changed during their absence
             existingRecord.Reactivate();
-            existingRecord.UpdateProfile(request.FirstName, request.LastName);
+            
+            // Architectural Fix: Corrected method signature to match the updated Domain Model (3 arguments)
+            existingRecord.UpdateProfile(request.Upn, request.FirstName, request.LastName);
+            
             await colleagueRepository.UpdateAsync(existingRecord, cancellationToken);
             return Result<Unit>.Success(Unit.Value);
         }
 
-        // 2. Add brand new user
-        // Architectural fairness constraint: New joiners inherit the current highest moderation count
-        // so they don't get spammed by the algorithm immediately.
         int currentMaxModerationCount = allColleagues.Count != 0 && allColleagues.Any(c => c.IsActive)
             ? allColleagues.Where(c => c.IsActive).Max(c => c.ModerationCount) 
             : 0;
@@ -46,7 +44,6 @@ public class AddColleagueCommandHandler(IColleagueRepository colleagueRepository
             lastName: request.LastName,
             initialModerationCount: currentMaxModerationCount);
 
-        // We use AddRangeAsync as defined in your provided IColleagueRepository
         await colleagueRepository.AddRangeAsync([newColleague], cancellationToken);
         
         return Result<Unit>.Success(Unit.Value);
