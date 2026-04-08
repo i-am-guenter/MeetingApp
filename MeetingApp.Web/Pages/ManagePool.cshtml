@@ -1,0 +1,112 @@
+﻿@page
+@model MeetingApp.Web.Pages.ManagePoolModel
+@{
+    ViewData["Title"] = "Manage Pool";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Pool Management</h2>
+
+    @if (Model.SuccessMessage is not null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @Model.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model.ErrorMessage is not null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i> @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Data Entry Form Area -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Add Colleague</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="Add">
+                        <div class="mb-3">
+                            <label for="inputFirstName" class="form-label fw-bold">First Name</label>
+                            <input type="text" class="form-control" id="inputFirstName" asp-for="InputFirstName" placeholder="e.g. Thomas" required>
+                            <span asp-validation-for="InputFirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputLastName" class="form-label fw-bold">Last Name</label>
+                            <input type="text" class="form-control" id="inputLastName" asp-for="InputLastName" placeholder="e.g. Müller" required>
+                            <span asp-validation-for="InputLastName" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label for="inputUpn" class="form-label fw-bold">UPN (Email)</label>
+                            <input type="email" class="form-control" id="inputUpn" asp-for="InputUpn" placeholder="thomas.mueller@bosch.com" required>
+                            <span asp-validation-for="InputUpn" class="text-danger small"></span>
+                            <div class="form-text">This acts as the unique business identifier.</div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-2 shadow-sm">
+                            <i class="bi bi-person-plus me-2"></i> Add to Pool
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Read-Model / Data Grid Area -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">Active Members</h5>
+                    <span class="badge bg-secondary px-3 py-2">Total: @Model.ActivePool.Count</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Display Name</th>
+                                    <th>UPN / Email</th>
+                                    <th class="text-center">Moderation Count</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var member in Model.ActivePool)
+                                {
+                                    <tr>
+                                        <td class="ps-4 fw-medium">@member.DisplayName</td>
+                                        <td class="text-muted small">@member.Upn</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-dark rounded-pill fs-6">@member.ModerationCount</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <form method="post" asp-page-handler="Toggle" onsubmit="return confirm('Do you really want to deactivate @member.DisplayName? This will remove them from the selection algorithm.');">
+                                                <input type="hidden" name="upn" value="@member.Upn" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-person-dash"></i> Deactivate
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ActivePool.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="bi bi-inbox fs-2 d-block mb-3"></i>
+                                            No active colleagues found. Please add members using the form.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

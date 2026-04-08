@@ -13,18 +13,16 @@ public class MeetingDbContext(DbContextOptions<MeetingDbContext> options) : DbCo
 
         modelBuilder.Entity<ColleagueRecord>(entity =>
         {
-            entity.HasKey(e => e.EntraObjectId);
-            entity.Property(e => e.EntraObjectId).ValueGeneratedNever();
+            // Standard Guid Primary Key
+            entity.HasKey(e => e.Id);
             
+            entity.Property(e => e.Upn).IsRequired().HasMaxLength(255);
             entity.Property(e => e.FirstName).IsRequired().HasMaxLength(100);
             entity.Property(e => e.LastName).IsRequired().HasMaxLength(100);
             entity.Property(e => e.DisplayName).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
-            entity.Property(e => e.Department).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.ProfilePictureUri).HasMaxLength(1000);
             
-            entity.HasIndex(e => new { e.Department, e.IsActive });
-            entity.HasIndex(e => e.Email);
+            // The UPN must be unique across the entire database to prevent duplicates
+            entity.HasIndex(e => e.Upn).IsUnique();
         });
     }
 }

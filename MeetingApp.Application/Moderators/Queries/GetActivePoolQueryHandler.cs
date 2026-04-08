@@ -10,10 +10,10 @@ public class GetActivePoolQueryHandler(IColleagueRepository colleagueRepository)
     {
         var activeColleagues = await colleagueRepository.GetActiveColleaguesAsync(cancellationToken);
 
-        // Map domain entities to DTOs for presentation, ordered alphabetically for the UI grid
+        // Architectural Fix: Changed 'c.Email' to 'c.Upn' to match the updated Domain Model
         return activeColleagues
             .OrderBy(c => c.DisplayName)
-            .Select(c => new PoolMemberDto(c.DisplayName, c.Email, c.ModerationCount))
+            .Select(c => new PoolMemberDto(c.DisplayName, c.Upn, c.ModerationCount))
             .ToList();
     }
 }

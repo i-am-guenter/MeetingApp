@@ -19,20 +19,6 @@ public class ColleagueRepository(MeetingDbContext dbContext) : IColleagueReposit
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<ColleagueRecord>> GetActiveColleaguesByDepartmentAsync(string department, CancellationToken cancellationToken = default)
-    {
-        return await dbContext.Colleagues
-            .Where(c => c.IsActive && c.Department == department)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<List<ColleagueRecord>> GetAllColleaguesByDepartmentAsync(string department, CancellationToken cancellationToken = default)
-    {
-        return await dbContext.Colleagues
-            .Where(c => c.Department == department)
-            .ToListAsync(cancellationToken);
-    }
-
     public async Task AddRangeAsync(IEnumerable<ColleagueRecord> colleagues, CancellationToken cancellationToken = default)
     {
         await dbContext.Colleagues.AddRangeAsync(colleagues, cancellationToken);
