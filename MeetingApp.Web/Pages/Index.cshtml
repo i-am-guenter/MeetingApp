@@ -1,0 +1,115 @@
+﻿@page
+@model MeetingApp.Web.Pages.IndexModel
+@{
+    ViewData["Title"] = "Moderator Selection";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">Fair Meeting Moderator</h1>
+        <p class="lead text-muted">
+            Algorithm-based selection ensuring equal distribution of moderation duties across our target team.
+        </p>
+    </div>
+
+    <div class="row">
+        <!-- Left Column: The Action Area -->
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm border-0 bg-light">
+                <div class="card-body text-center p-5">
+                    
+                    <form method="post" asp-page-handler="SelectModerator">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm py-3" 
+                                @(Model.ActivePool.Count == 0 ? "disabled" : "")>
+                            <i class="bi bi-person-gear me-2"></i> Select Next Moderator
+                        </button>
+                    </form>
+                    
+                    @if (Model.ActivePool.Count == 0)
+                    {
+                        <div class="alert alert-warning mt-4 text-start" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <strong>Empty Pool:</strong> No active colleagues found. The startup synchronization might have failed or the configuration is empty.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Result Presentation -->
+            <div class="mt-4">
+                @if (Model.ErrorMessage is not null)
+                {
+                    <div class="alert alert-danger shadow-sm" role="alert">
+                        <h5 class="alert-heading">Selection Failed</h5>
+                        <p class="mb-0">@Model.ErrorMessage</p>
+                    </div>
+                }
+
+                @if (Model.SelectedModerator is not null)
+                {
+                    <div class="card shadow border-success">
+                        <div class="card-header bg-success text-white fw-bold">
+                            <i class="bi bi-check-circle me-2"></i> New Moderator Selected
+                        </div>
+                        <div class="card-body text-center">
+                            <h4 class="card-title text-success mb-1">@Model.SelectedModerator.DisplayName</h4>
+                            <h6 class="card-subtitle mb-4 text-muted">@Model.SelectedModerator.Upn</h6>
+                            
+                            <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light rounded">
+                                <span class="fw-bold">Total Moderations</span>
+                                <span class="badge bg-primary rounded-pill fs-6">@Model.SelectedModerator.NewModerationCount</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Right Column: The Read-Model / Data Grid -->
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">Current Pool State</h5>
+                    <span class="badge bg-secondary">Total: @Model.ActivePool.Count</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Display Name</th>
+                                    <th>UPN / Email</th>
+                                    <th class="text-center pe-4">Moderation Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var member in Model.ActivePool)
+                                {
+                                    // Highlight the newly selected moderator in the grid
+                                    bool isSelected = Model.SelectedModerator?.Upn == member.Upn;
+                                    <tr class="@(isSelected ? "table-success" : "")">
+                                        <td class="ps-4 fw-medium">@member.DisplayName</td>
+                                        <td class="text-muted small">@member.Upn</td>
+                                        <td class="text-center pe-4">
+                                            <span class="badge @(isSelected ? "bg-success" : "bg-dark") rounded-pill">
+                                                @member.ModerationCount
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ActivePool.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-muted">
+                                            No data available.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

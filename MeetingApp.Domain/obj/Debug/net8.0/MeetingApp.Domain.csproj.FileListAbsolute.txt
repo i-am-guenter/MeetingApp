@@ -1,0 +1,13 @@
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/bin/Debug/net8.0/MeetingApp.Domain.deps.json
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/bin/Debug/net8.0/MeetingApp.Domain.dll
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/bin/Debug/net8.0/MeetingApp.Domain.pdb
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.AssemblyInfoInputs.cache
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.AssemblyInfo.cs
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.csproj.CoreCompileInputs.cache
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.dll
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/refint/MeetingApp.Domain.dll
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.pdb
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/ref/MeetingApp.Domain.dll
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.sourcelink.json
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/obj/Debug/net8.0/MeetingApp.Domain.csproj.AssemblyReference.cache

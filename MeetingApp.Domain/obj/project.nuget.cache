@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "dgSpecHash": "UuQ2qK8kBqg=",
+  "success": true,
+  "projectFilePath": "/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Domain/MeetingApp.Domain.csproj",
+  "expectedPackageFiles": [
+    "/Users/guenter/.nuget/packages/mediatr/14.1.0/mediatr.14.1.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.0/microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.0/microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.identitymodel.abstractions/8.14.0/microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.14.0/microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.identitymodel.logging/8.14.0/microsoft.identitymodel.logging.8.14.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.identitymodel.tokens/8.14.0/microsoft.identitymodel.tokens.8.14.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/system.diagnostics.diagnosticsource/10.0.0/system.diagnostics.diagnosticsource.10.0.0.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.22/microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "/Users/guenter/.nuget/packages/microsoft.netcore.app.ref/8.0.22/microsoft.netcore.app.ref.8.0.22.nupkg.sha512"
+  ],
+  "logs": []
+}
