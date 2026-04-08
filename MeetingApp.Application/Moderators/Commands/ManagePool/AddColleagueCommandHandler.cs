@@ -5,46 +5,49 @@ using MeetingApp.Domain.Moderators;
 
 namespace MeetingApp.Application.Moderators.Commands.ManagePool;
 
-// Assuming the Command record is defined in the same file or a corresponding one.
+/// <summary>
+/// Command to add a new colleague to the pool.
+/// </summary>
 public record AddColleagueCommand(string Upn, string FirstName, string LastName) : IRequest<Result<Unit>>;
 
-public class AddColleagueCommandHandler(IColleagueRepository colleagueRepository) 
+public class AddColleagueCommandHandler(IColleagueRepository repository) 
     : IRequestHandler<AddColleagueCommand, Result<Unit>>
 {
-    public async Task<Result<Unit>> Handle(AddColleagueCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(AddColleagueCommand request, CancellationToken ct)
     {
-        string normalizedUpn = request.Upn.ToLowerInvariant().Trim();
-        
-        var allColleagues = await colleagueRepository.GetAllColleaguesAsync(cancellationToken);
+        var normalizedUpn = request.Upn.ToLowerInvariant().Trim();
+        var allColleagues = await repository.GetAllColleaguesAsync(ct);
         var existingRecord = allColleagues.FirstOrDefault(c => c.Upn == normalizedUpn);
 
         if (existingRecord is not null)
         {
-            if (existingRecord.IsActive)
+            if (existingRecord.IsActive) 
             {
-                return Result<Unit>.Failure($"A colleague with UPN '{normalizedUpn}' is already active in the pool.");
+                return Result<Unit>.Failure("User is already an active member of the pool.");
             }
             
+            // Reactivate soft-deleted user
             existingRecord.Reactivate();
             
-            // Architectural Fix: Corrected method signature to match the updated Domain Model (3 arguments)
+            // Synchronized update call with 3 arguments to match the unified Domain behavior
             existingRecord.UpdateProfile(request.Upn, request.FirstName, request.LastName);
             
-            await colleagueRepository.UpdateAsync(existingRecord, cancellationToken);
+            await repository.UpdateAsync(existingRecord, ct);
             return Result<Unit>.Success(Unit.Value);
         }
 
-        int currentMaxModerationCount = allColleagues.Count != 0 && allColleagues.Any(c => c.IsActive)
+        // Architectural Fairness: New members start with the current maximum count
+        int currentMaxCount = allColleagues.Count != 0 && allColleagues.Any(c => c.IsActive)
             ? allColleagues.Where(c => c.IsActive).Max(c => c.ModerationCount) 
             : 0;
 
-        var newColleague = new ColleagueRecord(
-            upn: normalizedUpn,
-            firstName: request.FirstName,
+        var newRecord = new ColleagueRecord(
+            upn: normalizedUpn, 
+            firstName: request.FirstName, 
             lastName: request.LastName,
-            initialModerationCount: currentMaxModerationCount);
+            initialModerationCount: currentMaxCount);
 
-        await colleagueRepository.AddRangeAsync([newColleague], cancellationToken);
+        await repository.AddRangeAsync(new[] { newRecord }, ct);
         
         return Result<Unit>.Success(Unit.Value);
     }

@@ -1,114 +1,114 @@
 ﻿@page
 @model MeetingApp.Web.Pages.IndexModel
 @{
-    ViewData["Title"] = "Moderator Selection";
+    ViewData["Title"] = "Moderator Auswahl";
 }
 
 <div class="container mt-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 mb-3">Fair Meeting Moderator</h1>
+        <h1 class="display-4 fw-bold">Group meeting Moderator selection</h1>
         <p class="lead text-muted">
-            Algorithm-based selection ensuring equal distribution of moderation duties across our target team.
+            Please click the button to randomly select the next moderator.
         </p>
     </div>
 
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success alert-dismissible shadow-sm text-center animate__animated animate__fadeIn" role="alert">
+            <i class="bi bi-check-circle me-2"></i> <strong>@Model.SuccessMessage</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="row">
-        <!-- Left Column: The Action Area -->
         <div class="col-md-5 mb-4">
             <div class="card shadow-sm border-0 bg-light">
-                <div class="card-body text-center p-5">
+                <div class="card-body p-5 text-center">
                     
-                    <form method="post" asp-page-handler="SelectModerator">
-                        <!-- State Tracker for Feature 5 -->
-                        <input type="hidden" asp-for="ExcludedIdsJson" />
-                        
-                        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm py-3" 
-                                @(Model.ActivePool.Count(c => c.IsActive) == 0 ? "disabled" : "")>
-                            <i class="bi bi-person-gear me-2"></i> Select Next Moderator
-                        </button>
-                    </form>
-                    
-                    @if (Model.ExcludedIdsJson != "[]")
+                    @if (Model.ProposedModerator == null)
                     {
-                        <form method="post" asp-page-handler="ResetExclusions" class="mt-3">
-                            <button type="submit" class="btn btn-sm btn-outline-secondary w-100">
-                                <i class="bi bi-arrow-clockwise"></i> Reset Reject-Filters
+                        <form method="post" asp-page-handler="Propose">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm"
+                                    @(Model.ActivePool.Count == 0 ? "disabled" : "")>
+                                <i class="bi bi-person-gear me-2"></i> Moderator vorschlagen
                             </button>
                         </form>
                     }
-                </div>
-            </div>
-
-            <!-- Result Presentation -->
-            <div class="mt-4">
-                @if (Model.ErrorMessage is not null)
-                {
-                    <div class="alert alert-danger shadow-sm" role="alert">
-                        <h5 class="alert-heading">Selection Failed</h5>
-                        <p class="mb-0">@Model.ErrorMessage</p>
-                    </div>
-                }
-
-                @if (Model.SelectedModerator is not null)
-                {
-                    <div class="card shadow border-success">
-                        <div class="card-header bg-success text-white fw-bold">
-                            <i class="bi bi-check-circle me-2"></i> New Moderator Selected
-                        </div>
-                        <div class="card-body text-center">
-                            <h4 class="card-title text-success mb-1">@Model.SelectedModerator.DisplayName</h4>
-                            <h6 class="card-subtitle mb-4 text-muted">@Model.SelectedModerator.Upn</h6>
+                    else
+                    {
+                        <div class="bg-white rounded p-4 border border-info shadow-sm animate__animated animate__pulse">
+                            <span class="badge bg-info text-dark mb-2">Vorschlag</span>
+                            <h3 class="text-primary mb-1">@Model.ProposedModerator.DisplayName</h3>
+                            <p class="text-muted small mb-3">@Model.ProposedModerator.Upn</p>
                             
-                            <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light rounded mb-3">
-                                <span class="fw-bold">Total Moderations</span>
-                                <span class="badge bg-primary rounded-pill fs-6">@Model.SelectedModerator.NewModerationCount</span>
+                            <div class="d-flex justify-content-center align-items-center mb-4 bg-light p-2 rounded border">
+                                <span class="fw-bold me-3 text-secondary text-uppercase small">Zukünftiger Stand:</span>
+                                <span class="badge bg-primary fs-5 shadow-sm">@Model.ProposedModerator.NewModerationCount</span>
                             </div>
 
-                            <!-- Feature 5: Reject Button -->
-                            <form method="post" asp-page-handler="Reject">
-                                <input type="hidden" asp-for="ExcludedIdsJson" />
-                                <input type="hidden" name="rejectedId" value="@Model.SelectedModerator.Id" />
-                                <button type="submit" class="btn btn-outline-warning w-100">
-                                    <i class="bi bi-shuffle"></i> Reject & Re-Roll
-                                </button>
-                            </form>
+                            <div class="d-flex gap-2">
+                                <form method="post" asp-page-handler="Accept" class="w-50">
+                                    <input type="hidden" asp-for="ProposedId" />
+                                    <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm">
+                                        <i class="bi bi-check-lg"></i> Übernehmen
+                                    </button>
+                                </form>
+                                
+                                <form method="post" asp-page-handler="Reject" class="w-50">
+                                    <input type="hidden" asp-for="ProposedId" />
+                                    <button type="submit" class="btn btn-outline-danger w-100 py-2">
+                                        <i class="bi bi-x-lg"></i> Ablehnen
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+
+                    <form method="post" asp-page-handler="ResetFilters" class="mt-4">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary w-100 opacity-75">
+                            <i class="bi bi-arrow-clockwise"></i> Sitzungs-Filter zurücksetzen
+                        </button>
+                    </form>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-warning mt-4 text-start small border-0 shadow-sm" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i> @Model.ErrorMessage
+                        </div>
+                    }
+                </div>
             </div>
         </div>
 
-        <!-- Right Column: The Read-Model / Data Grid -->
         <div class="col-md-7">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold">Current Pool State</h5>
-                    <span class="badge bg-secondary">Total: @Model.ActivePool.Count</span>
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                    <h5 class="mb-0 fw-bold text-dark">Aktueller Pool-Status</h5>
+                    <span class="badge bg-secondary px-3 py-2">@Model.ActivePool.Count Mitglieder</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0 align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="ps-4">Display Name</th>
-                                    <th>UPN / Email</th>
-                                    <th class="text-center pe-4">Count</th>
+                                    <th class="ps-4">Anzeigename</th>
+                                    <th>Email / UPN</th>
+                                    <th class="text-center pe-4">Anzahl</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var member in Model.ActivePool)
                                 {
-                                    bool isSelected = Model.SelectedModerator?.Upn == member.Upn;
-                                    string rowClass = isSelected ? "table-success" : (member.IsActive ? "" : "table-secondary text-muted opacity-50");
+                                    bool isProposed = (Model.ProposedModerator?.Upn == member.Upn);
                                     
-                                    <tr class="@rowClass">
+                                    <tr class="@(isProposed ? "table-info" : "")">
                                         <td class="ps-4 fw-medium">
                                             @member.DisplayName
-                                            @if(!member.IsActive) { <i class="bi bi-pause-circle ms-2" title="Inactive"></i> }
+                                            @if (isProposed) { <span class="ms-2 badge bg-info text-dark small"><i class="bi bi-arrow-left"></i> Vorschlag</span> }
                                         </td>
-                                        <td class="small">@member.Upn</td>
+                                        <td class="small text-muted">@member.Upn</td>
                                         <td class="text-center pe-4">
-                                            <span class="badge @(isSelected ? "bg-success" : (member.IsActive ? "bg-dark" : "bg-secondary")) rounded-pill">
+                                            <span class="badge @(isProposed ? "bg-info text-dark" : "bg-dark rounded-pill") shadow-sm">
                                                 @member.ModerationCount
                                             </span>
                                         </td>

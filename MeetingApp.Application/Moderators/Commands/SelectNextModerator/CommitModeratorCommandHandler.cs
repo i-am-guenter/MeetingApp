@@ -1,3 +1,4 @@
+/*
 using MediatR;
 using MeetingApp.Application.Moderators.Interfaces;
 using MeetingApp.Domain.Common;
@@ -26,3 +27,4 @@ public class CommitModeratorCommandHandler(IColleagueRepository repository) : IR
         return Result<Unit>.Success(Unit.Value);
     }
 }
+*/

@@ -1,4 +1,5 @@
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/bin/Debug/net8.0/MeetingApp.Infrastructure.deps.json
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/bin/Debug/net8.0/MeetingApp.Infrastructure.runtimeconfig.json
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/bin/Debug/net8.0/MeetingApp.Infrastructure.dll
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/bin/Debug/net8.0/MeetingApp.Infrastructure.pdb
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/bin/Debug/net8.0/MeetingApp.Application.dll
@@ -10,11 +11,10 @@
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.AssemblyInfoInputs.cache
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.AssemblyInfo.cs
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.sourcelink.json
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingA.59C77D21.Up2Date
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.dll
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/refint/MeetingApp.Infrastructure.dll
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.pdb
-/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/ref/MeetingApp.Infrastructure.dll
-/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/bin/Debug/net8.0/MeetingApp.Infrastructure.runtimeconfig.json
-/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.sourcelink.json
 /Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/MeetingApp.Infrastructure.genruntimeconfig.cache
+/Users/guenter/source/repos/github/MeetingApp/MeetingApp.Infrastructure/obj/Debug/net8.0/ref/MeetingApp.Infrastructure.dll

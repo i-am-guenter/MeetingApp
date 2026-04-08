@@ -33,7 +33,7 @@ builder.Services.AddDbContext<MeetingDbContext>(options =>
 // 4. CQRS via MediatR
 builder.Services.AddMediatR(cfg => 
 {
-    cfg.RegisterServicesFromAssembly(typeof(SelectNextModeratorCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(ProposeModeratorCommand).Assembly);
 });
 
 // 5. Dependency Injection Bindings

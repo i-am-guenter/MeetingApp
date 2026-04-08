@@ -2,12 +2,16 @@ namespace MeetingApp.Domain.Moderators;
 
 public static class ModeratorSelectionPolicy
 {
-    // Architectural Update: The policy now respects an exclusion list for the "Reject" feature
-    public static ColleagueRecord? SelectNext(IEnumerable<ColleagueRecord> pool, HashSet<Guid> excludedIds)
+    /// <summary>
+    /// Executes the weighted random selection based on the persistent DB state.
+    /// Architectural Update: Stateless exclusion lists are replaced by DB-backed rejection tracking.
+    /// </summary>
+    public static ColleagueRecord? SelectNext(IEnumerable<ColleagueRecord> pool)
     {
-        // Only consider active users that are NOT currently excluded by the UI session
-        List<ColleagueRecord> eligiblePool = pool
-            .Where(c => c.IsActive && !excludedIds.Contains(c.Id))
+        // We only consider active colleagues who haven't been rejected in the current selection round.
+        // Rejections are persisted via the 'LastRejectedAt' property in the database.
+        var eligiblePool = pool
+            .Where(c => c.IsActive && c.LastRejectedAt == null)
             .ToList();
         
         if (eligiblePool.Count == 0)
@@ -15,13 +19,15 @@ public static class ModeratorSelectionPolicy
             return null;
         }
 
+        // Standard logic: Find the minimum moderation count among eligible candidates.
         int minModerationCount = eligiblePool.Min(c => c.ModerationCount);
         
-        List<ColleagueRecord> eligibleCandidates = eligiblePool
+        var eligibleCandidates = eligiblePool
             .Where(c => c.ModerationCount == minModerationCount)
             .ToList();
 
-        Random random = new();
+        // Perform random selection among tied candidates to ensure fairness.
+        var random = new Random();
         int selectedIndex = random.Next(eligibleCandidates.Count);
 
         return eligibleCandidates[selectedIndex];
